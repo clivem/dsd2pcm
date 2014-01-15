@@ -38,7 +38,7 @@ noiseshape.o
 all: $(NAME)
 
 $(NAME): $(LIB_NAME).so.$(VERSION) $(BIN_OBJS)
-	$(CC) -o $(NAME) $(BIN_OBJS) $(LFLAGS) -L . -ldsd2pcm
+	$(CC) -o $(NAME) $(BIN_OBJS) $(LDFLAGS) -L . -ldsd2pcm
 
 $(LIB_NAME).so.$(VERSION): $(LIB_OBJS)
 	$(CC) -shared -Wl,-soname,$(LIB_NAME).so.$(SONAME) $(LDFLAGS) -o $(LIB_NAME).so.$(VERSION) $(LIB_OBJS)
