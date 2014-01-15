@@ -46,7 +46,7 @@ $(LIB_NAME).so.$(VERSION): $(LIB_OBJS)
 	ln -s $(LIB_NAME).so.$(SONAME) $(LIB_NAME).so
 
 dsd2pcm.o: dsd2pcm.c
-	$(CC) -I $(INCLUDES) $(CFLAGS) $(LDFLAGS) dsd2pcm.c
+	$(CC) -I $(INCLUDES) $(CFLAGS) dsd2pcm.c
 
 main.o: main.cpp
 	$(CC) -I $(INCLUDES) $(CFLAGS) main.cpp
