@@ -26,6 +26,10 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed
 or implied, of Sebastian Gesemann.
 
+----
+
+Marked additions (c) Adrian Smith, 2013 under same licence terms
+
  */
 
 #ifndef DSD2PCM_H_INCLUDED
@@ -50,7 +54,7 @@ typedef struct dsd2pcm_ctx_s dsd2pcm_ctx;
  * POSIX thread-safety definition because it modifies global state
  * (lookup tables are computed during the first call)
  */
-extern dsd2pcm_ctx* dsd2pcm_init();
+extern dsd2pcm_ctx* dsd2pcm_init(void);
 
 /**
  * deinitializes a "dsd2pcm engine"
@@ -85,6 +89,16 @@ extern void dsd2pcm_translate(dsd2pcm_ctx *ctx,
 	const unsigned char *src, ptrdiff_t src_stride,
 	int lsbitfirst,
 	float *dst, ptrdiff_t dst_stride);
+
+/**
+ * Additions by Adrian Smith (c) 2013 for Squeezelite
+ */
+extern unsigned char dsd2pcm_bitreverse[];
+
+extern void dsd2pcm_precalc(void);
+/**
+ * End of addition
+ */
 
 #ifdef __cplusplus
 } /* extern "C" */

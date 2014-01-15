@@ -26,6 +26,12 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed
 or implied, of Sebastian Gesemann.
 
+----
+
+Additions (c) Adrian Smith, 2013 under same licence terms:
+- expose bitreverse array as dsd2pcm_bitreverse
+- expose precalc function as dsd2pcm_precalc to allow it to be initalised
+
  */
 
 #include <stdlib.h>
@@ -114,16 +120,16 @@ static const double htaps[HTAPS] = {
 };
 
 static float ctables[CTABLES][256];
-static unsigned char bitreverse[256];
+unsigned char dsd2pcm_bitreverse[256];
 static int precalculated = 0;
 
-static void precalc()
+void dsd2pcm_precalc(void)
 {
 	int t, e, m, k;
 	double acc;
 	if (precalculated) return;
 	for (t=0, e=0; t<256; ++t) {
-		bitreverse[t] = e;
+		dsd2pcm_bitreverse[t] = e;
 		for (m=128; m && !((e^=m)&m); m>>=1)
 			;
 	}
@@ -150,7 +156,7 @@ struct dsd2pcm_ctx_s
 extern dsd2pcm_ctx* dsd2pcm_init()
 {
 	dsd2pcm_ctx* ptr;
-	if (!precalculated) precalc();
+	if (!precalculated) dsd2pcm_precalc();
 	ptr = (dsd2pcm_ctx*) malloc(sizeof(dsd2pcm_ctx));
 	if (ptr) dsd2pcm_reset(ptr);
 	return ptr;
@@ -200,10 +206,10 @@ extern void dsd2pcm_translate(
 	lsbf = lsbf ? 1 : 0;
 	while (samples-- > 0) {
 		bite1 = *src & 0xFFu;
-		if (lsbf) bite1 = bitreverse[bite1];
+		if (lsbf) bite1 = dsd2pcm_bitreverse[bite1];
 		ptr->fifo[ffp] = bite1; src += src_stride;
 		p = ptr->fifo + ((ffp-CTABLES) & FIFOMASK);
-		*p = bitreverse[*p & 0xFF];
+		*p = dsd2pcm_bitreverse[*p & 0xFF];
 		acc = 0;
 		for (i=0; i<CTABLES; ++i) {
 			bite1 = ptr->fifo[(ffp              -i) & FIFOMASK] & 0xFF;
